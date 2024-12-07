@@ -76,7 +76,40 @@ func Ex4() {
 	fmt.Printf("Modified age: %v\n", ageField.Interface())
 }
 
+func Ex5() {
+	data := interface{}(42)
+	dataType := reflect.TypeOf(data)
+
+	if dataType.Kind() == reflect.Int {
+		intValue := data.(int)
+		fmt.Printf("Data value: %v\nData type: %T\n", data, data)
+		fmt.Printf("Int value: %v\n", intValue)
+	}
+}
+
+func Ex6() {
+	// typeName := "int"
+	typeToCreate := reflect.TypeOf(0)
+	if typeToCreate.Kind() == reflect.Int {
+		newInt := reflect.New(typeToCreate).Elem().Interface().(int)
+		fmt.Printf("New int instance: %v\n", newInt)
+	}
+}
+
+func Ex7() {
+	tt := reflect.StructOf([]reflect.StructField{
+		{
+			Name: "Height",
+			Type: reflect.TypeOf(0.0),
+			Tag:  `json:"height"`,
+		},
+	})
+
+	fmt.Println(tt.FieldByIndex([]int{0}))
+	fmt.Println(tt.Field(0))
+}
+
 func main() {
-	Ex4()
+	Ex7()
 	// Check1()
 }
