@@ -68,11 +68,11 @@ func Ex4() {
 	}
 	valueOfPerson := reflect.ValueOf(person)
 	nameField := valueOfPerson.FieldByName("Name")
-	fmt.Printf("Name field: %v", nameField.Interface())
+	fmt.Printf("Name field: %v\n", nameField.Interface())
 	ageField := valueOfPerson.FieldByName("Age")
-	fmt.Printf("Unmodified age: %v", ageField.Interface())
+	fmt.Printf("Unmodified age: %v\n", ageField.Interface())
 	ageField.SetInt(30)
-	fmt.Printf("Modified age: %v", ageField.Interface())
+	fmt.Printf("Modified age: %v\n", ageField.Interface())
 }
 
 func main() {
