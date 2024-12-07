@@ -11,7 +11,7 @@ func observe(a any) {
 	fmt.Println("------------------------------")
 }
 
-func ex1() {
+func Ex1() {
 	var value float64 = 25
 	value2 := "welcome learners"
 	observe(value)
@@ -26,7 +26,7 @@ type Person struct {
 	Email string
 }
 
-func ex2() {
+func Ex2() {
 	person := Person{
 		Name:  "Ken",
 		Age:   37,
@@ -41,6 +41,41 @@ func ex2() {
 	}
 }
 
+func Ex3() {
+	original := "hello"
+
+	reflected := reflect.ValueOf(original)
+	reflectedInterface := reflected.Interface()
+
+	twiceReflected := reflect.ValueOf(reflectedInterface)
+
+	condition := twiceReflected.Interface() == original
+	fmt.Printf("Is the twice reflected same as one? %v", condition)
+}
+
+func Check1() {
+	// a := interface{}("hello")
+	var a interface{} = "hello"
+	fmt.Println(a)
+	fmt.Printf("tyoe of a: %T", a)
+}
+
+func Ex4() {
+	person := Person{
+		Name:  "Ken",
+		Age:   37,
+		Email: "ken@example.com",
+	}
+	valueOfPerson := reflect.ValueOf(person)
+	nameField := valueOfPerson.FieldByName("Name")
+	fmt.Printf("Name field: %v", nameField.Interface())
+	ageField := valueOfPerson.FieldByName("Age")
+	fmt.Printf("Unmodified age: %v", ageField.Interface())
+	ageField.SetInt(30)
+	fmt.Printf("Modified age: %v", ageField.Interface())
+}
+
 func main() {
-	ex2()
+	Ex4()
+	// Check1()
 }
