@@ -20,13 +20,13 @@ func ex1() {
 	fmt.Println(T)
 }
 
-func ex2() {
-	type Person struct {
-		Name  string
-		Age   int
-		Email string
-	}
+type Person struct {
+	Name  string
+	Age   int
+	Email string
+}
 
+func ex2() {
 	person := Person{
 		Name:  "Ken",
 		Age:   37,
@@ -37,7 +37,7 @@ func ex2() {
 	fmt.Printf("Type of of struct: %s\n", structType)
 	for i := 1; i < structType.NumField(); i++ {
 		field := structType.Field(i)
-		fmt.Printf("Field name: %s. Field type: %s", field.Name, field.Type)
+		fmt.Printf("Field name: %s. Field type: %s\n", field.Name, field.Type)
 	}
 }
 
