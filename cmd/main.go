@@ -71,7 +71,8 @@ func Ex4() {
 	fmt.Printf("Name field: %v\n", nameField.Interface())
 	ageField := valueOfPerson.FieldByName("Age")
 	fmt.Printf("Unmodified age: %v\n", ageField.Interface())
-	ageField.SetInt(30)
+	ageField.SetInt(30) // I think this gives an error because
+	// we can set the underlying value only if the reflect.Value is a pointer.
 	fmt.Printf("Modified age: %v\n", ageField.Interface())
 }
 
