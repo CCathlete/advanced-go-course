@@ -151,7 +151,7 @@ func Ex10() {
 	// We then dereference it and take the second value of the array which is an unsafe.Pointer to an int.
 	convPi := (*[2]unsafe.Pointer)(pi)[1]
 	valueConvPi := *(*int)(convPi)
-	py := unsafe.Pointer(&y) // Pointer to an int64 (size of the pointer is 8)
+	py := unsafe.Pointer(&y) // Pointer to an int64 (size of the pointer is 8 bytes = 64 bits)
 	vy := *(*int)(py)
 	fmt.Printf("value: %d\n", valueConvPi)
 	fmt.Printf("value: %d\n", y)
