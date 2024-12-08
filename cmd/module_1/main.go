@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"reflect"
+	"unsafe"
 )
 
 func observe(a any) {
@@ -109,7 +110,55 @@ func Ex7() {
 	fmt.Println(tt.Field(0))
 }
 
+func Ex8() {
+	var x int = 42
+	y := *(*float64)(unsafe.Pointer(&x))
+	fmt.Printf("x (int): %d\n", x)
+	fmt.Printf("y (float64): %f\n", y)
+}
+
+func Ex9() {
+	person := Person{
+		Name: "Ken",
+		Age:  37,
+	}
+
+	size := unsafe.Sizeof(person)
+	addr := uintptr(unsafe.Pointer(&person))
+	nameOffset := uintptr(unsafe.Offsetof(person.Name))
+	ageOffset := uintptr(unsafe.Offsetof(person.Age))
+	namePtr := (*string)(unsafe.Pointer(addr + nameOffset))
+	agePtr := (*int)(unsafe.Pointer(addr + ageOffset))
+
+	fmt.Printf("Memory layout of Person struct (size=%d):\n", size)
+	fmt.Printf("Name: %s\n", *namePtr)
+	fmt.Printf("Age: %d\n", *agePtr)
+}
+
+func Ex10() {
+	var i interface{} = 42
+	y := i.(int) // Asserted i turns it to a real int.
+	fmt.Printf("Size of unasserted: %d\n", unsafe.Sizeof(i))
+	fmt.Printf("Size of asserted: %d\n", unsafe.Sizeof(y))
+	tyI := reflect.TypeOf(i)
+	// This shows the type of the underlying data, but i is an interface = an array of 2 pointers.
+	// One to type info and the other to the value of the data.
+	fmt.Printf("Type of unasserted: %d\n", tyI.Kind())
+
+	pi := unsafe.Pointer(&i) // Pointer to an interface!
+	// pi is a pointer so we can convert it only to a pointer.
+	// We convert it to a pointer of an array with size 2 and an underlying type of unsafe.Pointer.
+	// We then dereference it and take the second value of the array which is an unsafe.Pointer to an int.
+	convPi := (*[2]unsafe.Pointer)(pi)[1]
+	valueConvPi := *(*int)(convPi)
+	py := unsafe.Pointer(&y)
+	vy := *(*int)(py)
+	fmt.Printf("value: %d\n", valueConvPi)
+	fmt.Printf("value: %d\n", y)
+	fmt.Printf("value: %v\n", vy)
+}
+
 func main() {
-	Ex7()
+	Ex10()
 	// Check1()
 }
