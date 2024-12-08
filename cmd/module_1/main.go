@@ -143,7 +143,7 @@ func Ex10() {
 	tyI := reflect.TypeOf(i)
 	// This shows the type of the underlying data, but i is an interface = an array of 2 pointers.
 	// One to type info and the other to the value of the data.
-	fmt.Printf("Type of unasserted: %d\n", tyI.Kind())
+	fmt.Printf("Type of unasserted's underlying data: %d\n", tyI.Kind())
 
 	pi := unsafe.Pointer(&i) // Pointer to an interface!
 	// pi is a pointer so we can convert it only to a pointer.
@@ -151,7 +151,7 @@ func Ex10() {
 	// We then dereference it and take the second value of the array which is an unsafe.Pointer to an int.
 	convPi := (*[2]unsafe.Pointer)(pi)[1]
 	valueConvPi := *(*int)(convPi)
-	py := unsafe.Pointer(&y)
+	py := unsafe.Pointer(&y) // Pointer to an int64 (size of the pointer is 8)
 	vy := *(*int)(py)
 	fmt.Printf("value: %d\n", valueConvPi)
 	fmt.Printf("value: %d\n", y)
