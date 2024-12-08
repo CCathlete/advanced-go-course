@@ -2,12 +2,12 @@ package main
 
 /*
 #cgo CFLAGS: -I./c_files
-#cgo LDFLAGS: -L./c_files
+#cgo LDFLAGS: -L./c_files -lmyFuncs
 #include "myFuncs.h"
 #include <stdio.h>
 
 void myCFunction() {
-printf("Hello from C function!\n");
+printf("Hello from C function inside Go!\n");
 }
 */
 import "C"

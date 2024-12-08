@@ -1,0 +1,8 @@
+{
+  "files.associations": {
+    "*.gohtml": "html",
+    "*.go": "go",
+    "*.psql": "sql",
+    "stdio.h": "c"
+  }
+}
