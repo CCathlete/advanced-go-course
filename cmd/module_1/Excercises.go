@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"reflect"
+	"sync"
 	"unsafe"
 )
 
@@ -158,7 +159,38 @@ func Ex10() {
 	fmt.Printf("value: %v\n", vy)
 }
 
+// Without a waitgroup, this function (and maybe also main) will
+// finish running before the goroutines are done.
+// In this case there's no need for the mutex because the
+// waitgroup locks the gooroutines.
+func Ex11() {
+	var data int
+	// var lock sync.Mutex // mutex = mutual exclution.
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	go func() {
+		defer wg.Done()
+		// lock.Lock()
+		data = 42
+		// lock.Unlock()
+	}()
+	wg.Wait()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		// lock.Lock()
+		value := data
+		fmt.Println(value) // safe access
+		// lock.Unlock()
+		fmt.Println(value) // Unsafe access
+	}()
+	wg.Wait() // This is needed so this function will not finish
+	// before the goroutine.
+}
+
 func main() {
-	Ex10()
+	Ex11()
 	// Check1()
 }
