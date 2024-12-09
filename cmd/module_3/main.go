@@ -57,7 +57,8 @@ func CommitOrRollback(transaction *sql.Tx, err error) {
 		// we need to commit after all are executed successfully!
 		err := transaction.Commit()
 		if err != nil {
-			log.Println("There was a problem with committing the transaction.")
+			log.Println(
+				"There was a problem with committing the transaction.")
 		}
 	default:
 		err := transaction.Rollback()
