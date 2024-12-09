@@ -7,6 +7,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+/*
+NOTE: To see a coverage of all tests we could run
+go test -cover
+*/
+
 // Table driven tests.
 func TestEx5(t *testing.T) {
 	t.Run("Addition", func(t *testing.T) {
