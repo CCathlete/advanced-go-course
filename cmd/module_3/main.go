@@ -52,6 +52,9 @@ func connectionString() string {
 func CommitOrRollback(transaction *sql.Tx, err error) {
 	switch err {
 	case nil:
+		// Committing the transaction to the DB.
+		// If we have multiple statements in the same transaction
+		// we need to commit after all are executed successfully!
 		err := transaction.Commit()
 		if err != nil {
 			log.Println("There was a problem with committing the transaction.")
@@ -125,15 +128,6 @@ func Ex2(db *sql.DB, wg *sync.WaitGroup) {
 			log.Println(err)
 			return
 		}
-	}
-
-	// Committing the transaction to the DB.
-	// If we have multiple statements in the same transaction
-	// we need to commit after executing them all.
-	err = transaction.Commit()
-	if err != nil {
-		log.Println(err)
-		transaction.Rollback()
 	}
 }
 
