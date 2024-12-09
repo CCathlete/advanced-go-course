@@ -9,7 +9,7 @@ import (
 
 func main() {
 	wg := new(sync.WaitGroup) // returns initialised *sync.WaitGroup
-	wg.Add(2)
+	wg.Add(3)
 	db, err := ConnectToDB()
 	if err != nil {
 		log.Fatalln(err)
@@ -17,6 +17,7 @@ func main() {
 
 	go Ex1(db, wg)
 	go Ex2(db, wg)
+	go Ex3(wg)
 
 	wg.Wait()
 }
