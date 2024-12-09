@@ -133,7 +133,7 @@ func Ex2(db *sql.DB, wg *sync.WaitGroup) {
 }
 
 func main() {
-	var wg *sync.WaitGroup
+	wg := new(sync.WaitGroup) // returns initialised *synx,WaitGroup
 	wg.Add(2)
 	db, err := ConnectToDB()
 	if err != nil {
