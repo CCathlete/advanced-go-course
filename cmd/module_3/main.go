@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sync"
 
 	_ "github.com/jackc/pgx/v4/stdlib"
 )
@@ -45,14 +46,70 @@ func connectionString() string {
 	)
 }
 
-func Ex1(db *sql.DB) {
+func Ex1(db *sql.DB, wg *sync.WaitGroup) {
+	defer wg.Done()
 
+	var email string
+	rows, err := db.Query(`
+	select email from users
+	;`)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(&email)
+		fmt.Println(email)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
+func Ex2(db *sql.DB, wg *sync.WaitGroup) {
+	defer wg.Done()
+	var id int
+	var email string
+
+	transaction, err := db.Begin()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	statement, err := transaction.Prepare(`
+	select id, email from users
+	;`)
+	if err != nil {
+		transaction.Rollback()
+	}
+	defer statement.Close()
+
+	rows, err := statement.Query()
+	if err != nil {
+		transaction.Rollback()
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		err := rows.Scan(&id, &email)
+		fmt.Println(id, email)
+		if err != nil {
+			transaction.Rollback()
+		}
+	}
 }
 
 func main() {
+	var wg *sync.WaitGroup
+	wg.Add(2)
 	db, err := ConnectToDB()
 	if err != nil {
 		log.Fatalln(err)
 	}
-	Ex1(db)
+
+	go Ex1(db, wg)
+	go Ex2(db, wg)
+
+	wg.Wait()
 }
