@@ -38,8 +38,10 @@ func TestUnitHandler(t *testing.T) {
 	}
 }
 
+// We're creating a server so we can test multiple handlers.
 func TestIntegrationHemloHandler(t *testing.T) {
-	// Test server
+	// Test server - I think it might be better to pass a
+	// general handler/mux here.
 	ts := httptest.NewServer(http.HandlerFunc(HemloHandler))
 	defer ts.Close()
 
