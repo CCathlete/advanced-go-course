@@ -46,6 +46,25 @@ func connectionString() string {
 	)
 }
 
+// This will be the last thing executed (first defer).
+// It gets the last error value of the function and the transaction
+// and commits or rolls back according to the error.
+func CommitOrRollback(transaction *sql.Tx, err error) {
+	switch err {
+	case nil:
+		err := transaction.Commit()
+		if err != nil {
+			log.Println("There was a problem with committing the transaction.")
+		}
+	default:
+		err := transaction.Rollback()
+		if err != nil {
+			log.Println(
+				"There was a problem with rolling the transaction back.")
+		}
+	}
+}
+
 func Ex1(db *sql.DB, wg *sync.WaitGroup) {
 	defer wg.Done()
 
@@ -72,31 +91,49 @@ func Ex2(db *sql.DB, wg *sync.WaitGroup) {
 	var id int
 	var email string
 
+	// Starting a transaction.
 	transaction, err := db.Begin()
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return
 	}
+	defer CommitOrRollback(transaction, err)
 
+	// Creating the first statement to execute.
 	statement, err := transaction.Prepare(`
 	select id, email from users
 	;`)
 	if err != nil {
-		transaction.Rollback()
+		log.Println(err)
+		return
 	}
 	defer statement.Close()
 
+	// Executing the statement.
 	rows, err := statement.Query()
 	if err != nil {
-		transaction.Rollback()
+		log.Println(err)
+		return
 	}
 	defer rows.Close()
 
+	// Processing the result.
 	for rows.Next() {
 		err := rows.Scan(&id, &email)
 		fmt.Println(id, email)
 		if err != nil {
-			transaction.Rollback()
+			log.Println(err)
+			return
 		}
+	}
+
+	// Committing the transaction to the DB.
+	// If we have multiple statements in the same transaction
+	// we need to commit after executing them all.
+	err = transaction.Commit()
+	if err != nil {
+		log.Println(err)
+		transaction.Rollback()
 	}
 }
 
