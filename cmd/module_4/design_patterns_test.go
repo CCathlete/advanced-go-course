@@ -42,3 +42,10 @@ func TestGetMargherita(t *testing.T) {
 			pizza.Base.Cost())
 	})
 }
+
+func TestGCManagement(t *testing.T) {
+	t.Run("Testing management o GC with large storage and arithmetic.",
+		func(t *testing.T) {
+			ManageGC()
+		})
+}
