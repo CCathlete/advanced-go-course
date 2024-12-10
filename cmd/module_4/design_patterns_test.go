@@ -24,3 +24,21 @@ func TestGetInstance(t *testing.T) {
 		fmt.Println(instance.SomeField)
 	})
 }
+
+func TestGetMargherita(t *testing.T) {
+	t.Run("Let's make a Margherita.", func(t *testing.T) {
+		builder := NewMargheritaBuilder()
+		director := NewPizzaDirector(builder)
+		director.ConstructPizza()
+		pizza := builder.pizza
+		fmt.Printf(`Pizza details:
+		Dough: %s
+		Sauce: %s
+		Toppings: %s
+		Cost: %d
+		`, pizza.Base.(*PlainPizza).Dough,
+			pizza.Sauce,
+			pizza.Toppings,
+			pizza.Base.Cost())
+	})
+}
